@@ -1,22 +1,15 @@
 package codes.ernesto.vwap.poc;
 
-import codes.ernesto.vwap.InstrumentTracker;
-import codes.ernesto.vwap.MarketUpdate;
+import codes.ernesto.vwap.VwapLogger;
 
 import java.io.IOException;
-import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Supplier;
 
-public class ProofOfConcept {
+public class LiveScenario {
 
-  public static void main(String[] args) {
-    new ProofOfConcept().run();
-  }
-
-  private void run() {
-    var vwapLogger = new VwapLogger();
+  public void run(VwapLogger.SerialPolicy serialPolicy) {
+    var vwapLogger = new VwapLogger(serialPolicy);
 
     var instrumentIds = new String[] {
         "instrument1",
