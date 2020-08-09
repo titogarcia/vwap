@@ -1,4 +1,4 @@
-package codes.ernesto;
+package codes.ernesto.vwap;
 
 public class InstrumentTracker {
   private InstrumentDayTracker buyDayTracker = new InstrumentDayTracker();

@@ -1,4 +1,4 @@
-package codes.ernesto;
+package codes.ernesto.vwap;
 
 public class InstrumentPeriodTracker {
   private double high;

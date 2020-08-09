@@ -1,13 +1,13 @@
-package codes.ernesto;
+package codes.ernesto.vwap;
 
-public abstract class MarketUpdate {
+public class MarketUpdate {
   public final String marketVenueId;
   public final String instrumentId;
   public final double price;
   public final int quantity;
   public final MarketUpdateType type;
 
-  protected MarketUpdate(String marketVenueId, String instrumentId, double price, int quantity, MarketUpdateType type) {
+  public MarketUpdate(String marketVenueId, String instrumentId, double price, int quantity, MarketUpdateType type) {
     this.marketVenueId = marketVenueId;
     this.instrumentId = instrumentId;
     this.price = price;

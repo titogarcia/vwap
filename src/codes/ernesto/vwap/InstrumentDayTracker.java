@@ -1,4 +1,4 @@
-package codes.ernesto;
+package codes.ernesto.vwap;
 
 public class InstrumentDayTracker {
   private InstrumentPeriodTracker periodTracker = new InstrumentPeriodTracker();
@@ -14,7 +14,8 @@ public class InstrumentDayTracker {
   }
 
   public double getVwap() {
-    return cumulativeTpv / cumulativeVolume;
+    return (cumulativeTpv + periodTracker.getTpv())
+        / (cumulativeVolume + periodTracker.getVolume());
   }
 
   public void handleMarketUpdate(MarketUpdate update) {
