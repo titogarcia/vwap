@@ -16,6 +16,8 @@ public class ProofOfConcept {
   }
 
   private void run() {
+    var vwapLogger = new VwapLogger();
+
     var instrumentIds = new String[] {
         "instrument1",
         "instrument2",
@@ -23,8 +25,8 @@ public class ProofOfConcept {
     };
 
     var marketVenues = new MarketVenueEmulator[] {
-        new MarketVenueEmulator("marketVenue1", ProofOfConcept::handleMarketUpdate),
-        new MarketVenueEmulator("marketVenue2", ProofOfConcept::handleMarketUpdate),
+        new MarketVenueEmulator("marketVenue1", vwapLogger::handleMarketUpdate),
+        new MarketVenueEmulator("marketVenue2", vwapLogger::handleMarketUpdate),
     };
 
     for (var marketVenue : marketVenues) {
@@ -33,7 +35,7 @@ public class ProofOfConcept {
       }
     }
 
-    schedulePeriodsAndDays();
+    schedulePeriodsAndDays(vwapLogger);
 
     System.out.println("Press <ENTER> to exit...");
     try {
@@ -46,7 +48,7 @@ public class ProofOfConcept {
     System.exit(0);
   }
 
-  private void schedulePeriodsAndDays() {
+  private void schedulePeriodsAndDays(VwapLogger vwapLogger) {
     var scheduler = Executors.newSingleThreadScheduledExecutor();
 
     scheduler.scheduleAtFixedRate(new Runnable() {
@@ -58,48 +60,13 @@ public class ProofOfConcept {
 
         if (times == 0) {
           System.out.println("End of day ==================================");
-          endDay();
+          vwapLogger.endDay();
         }
         else {
           System.out.println("End of period -------------------------------");
-          endPeriod();
+          vwapLogger.endPeriod();
         }
       }
     }, 60, 60, TimeUnit.SECONDS);
-  }
-
-
-  private static Map<String, InstrumentTracker> instrumentTrackers = new HashMap<>();
-
-  private static void handleMarketUpdate(MarketUpdate update) {
-    var instrumentTracker = getOrPut(instrumentTrackers, update.instrumentId, InstrumentTracker::new);
-    instrumentTracker.handleMarketUpdate(update);
-
-    System.out.printf(
-        "Received: %s\n" +
-        "\tinstrument=%s, VWAP(buy)=%.2f, VWAP(sell)=%.2f\n",
-        update,
-        update.instrumentId, instrumentTracker.getVwapBuy(), instrumentTracker.getVwapSell());
-  }
-
-  private static void endPeriod() {
-    for (var instrumentTracker : instrumentTrackers.values()) {
-      instrumentTracker.endPeriod();
-    }
-  }
-
-  private static void endDay() {
-    for (var instrumentTracker : instrumentTrackers.values()) {
-      instrumentTracker.endDay();
-    }
-  }
-
-  private static <K, V> V getOrPut(Map<K, V> map, K key, Supplier<V> defaultValue) {
-    var result = map.get(key);
-    if (result == null) {
-      result = defaultValue.get();
-      map.put(key, result);
-    }
-    return result;
   }
 }
